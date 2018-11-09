@@ -9,12 +9,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-final class CameraLogger {
+public final class CameraLogger {
 
-    final static int LEVEL_VERBOSE = 0;
-    final static int LEVEL_INFO    = 1;
-    final static int LEVEL_WARNING = 2;
-    final static int LEVEL_ERROR   = 3;
+    public final static int LEVEL_VERBOSE = 0;
+    public final static int LEVEL_INFO    = 1;
+    public final static int LEVEL_WARNING = 2;
+    public final static int LEVEL_ERROR   = 3;
 
     static String sLastTag;
     static String sLastMessage;

@@ -4,24 +4,28 @@ import android.support.annotation.NonNull;
 
 class Size implements Comparable<Size> {
 
-    private final int width;
-    private final int height;
+    private final int mWidth;
+    private final int mHeight;
 
     Size(int width, int height) {
-        this.width = width;
-        this.height = height;
+        this.mWidth = width;
+        this.mHeight = height;
     }
 
     public int getWidth() {
-        return width;
+        return mWidth;
     }
 
     public int getHeight() {
-        return height;
+        return mHeight;
     }
 
     Size copy() {
-        return new Size(width, height);
+        return new Size(mWidth, mHeight);
+    }
+
+    Size flip() {
+        return new Size(mHeight, mWidth);
     }
 
     @Override
@@ -31,28 +35,28 @@ class Size implements Comparable<Size> {
 
         Size size = (Size) o;
 
-        if (width != size.width) return false;
-        return height == size.height;
+        if (mWidth != size.mWidth) return false;
+        return mHeight == size.mHeight;
     }
 
     @Override
     public int hashCode() {
-        int result = width;
-        result = 31 * result + height;
+        int result = mWidth;
+        result = 31 * result + mHeight;
         return result;
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Size{");
-        sb.append("width=").append(width);
-        sb.append(", height=").append(height);
+        sb.append("width=").append(mWidth);
+        sb.append(", height=").append(mHeight);
         sb.append('}');
         return sb.toString();
     }
 
     @Override
     public int compareTo(@NonNull Size another) {
-        return width * height - another.width * another.height;
+        return mWidth * mHeight - another.mWidth * another.mHeight;
     }
 }

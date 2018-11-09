@@ -1,7 +1,16 @@
 package master.infant.gpscamera;
 
+import android.hardware.Camera;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+
+import master.infant.gpscamera.cp.CameraPreview;
+import master.infant.gpscamera.cp.OrientationHelper;
+import master.infant.gpscamera.preview.CameraLogger;
+import master.infant.gpscamera.preview.CameraView;
 
 /**
  * Below is a single app base on related AR GPS location features.
@@ -36,9 +45,20 @@ import android.os.Bundle;
  * */
 public class MainActivity extends AppCompatActivity {
 
+    private CameraView mCameraView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        setContentView(R.layout.activity_camera);
+
+        CameraLogger.setLogLevel(CameraLogger.LEVEL_VERBOSE);
+
+        mCameraView = findViewById(R.id.camera_view);
+        mCameraView.setLifecycleOwner(this);
     }
+
 }
