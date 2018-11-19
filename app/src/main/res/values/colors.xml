@@ -3,4 +3,12 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
+    <color name="white_30">#4DFFFFFF</color>
+
+    <color name="compass_dial_plate">#66000000</color>
+    <color name="compass_border">@color/white_50</color>
+    <color name="compass_line">@color/white_30</color>
 </resources>

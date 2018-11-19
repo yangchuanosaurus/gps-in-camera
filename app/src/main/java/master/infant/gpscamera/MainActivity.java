@@ -1,14 +1,12 @@
 package master.infant.gpscamera;
 
-import android.hardware.Camera;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 
-import master.infant.gpscamera.cp.CameraPreview;
-import master.infant.gpscamera.cp.OrientationHelper;
+import master.infant.gpscamera.compass.CompassView;
 import master.infant.gpscamera.preview.CameraLogger;
 import master.infant.gpscamera.preview.CameraView;
 
@@ -51,14 +49,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
-                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+//                WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         setContentView(R.layout.activity_camera);
 
         CameraLogger.setLogLevel(CameraLogger.LEVEL_VERBOSE);
 
         mCameraView = findViewById(R.id.camera_view);
         mCameraView.setLifecycleOwner(this);
+
+        CompassView compassView = findViewById(R.id.compass_view);
+        compassView.setLifecycleOwner(this);
+    }
+
+    public void buttonFilterAction(View view) {
+        FilterActivity.start(this);
+    }
+
+    public void buttonGoAction(View view) {
+
     }
 
 }

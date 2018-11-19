@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <master.infant.gpscamera.preview.CameraView
@@ -9,5 +11,42 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:keepScreenOn="true" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintRight_toRightOf="parent"
+        android:padding="10dp" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="buttonFilterAction"
+                android:text="Filter"/>
+
+            <View
+                android:layout_width="16dp"
+                android:layout_height="1dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="buttonGoAction"
+                android:text="Go"/>
+
+        </LinearLayout>
+
+        <master.infant.gpscamera.compass.CompassView
+            android:id="@+id/compass_view"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="right"/>
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

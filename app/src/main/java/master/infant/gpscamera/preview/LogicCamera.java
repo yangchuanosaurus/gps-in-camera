@@ -7,9 +7,7 @@ import android.view.SurfaceHolder;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class LogicCamera implements Camera.PreviewCallback,
         Camera.ErrorCallback, CameraPreview.SurfaceCallback, Thread.UncaughtExceptionHandler {
