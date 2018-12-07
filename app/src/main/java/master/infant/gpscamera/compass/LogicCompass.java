@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.opengl.Matrix;
 import android.util.Log;
 import android.view.Surface;
 import android.view.WindowManager;
@@ -70,6 +71,7 @@ public class LogicCompass implements SensorEventListener {
          *             Equals 90° if the device right edge is down and the device left edge is up.
          */
         void onOrientationChanged(float azimuth, float pitch, float roll);
+        void onSensorChanged(SensorEvent sensorEvent);
     }
 
     private LogicCompass(Context context, CompassListener compassListener) {
@@ -145,6 +147,7 @@ public class LogicCompass implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        mCompassListener.onSensorChanged(event);
         synchronized (this) {
             // Get the orientation array with Sensor.TYPE_ROTATION_VECTOR if possible (more precise), otherwise with Sensor.TYPE_MAGNETIC_FIELD and Sensor.TYPE_ACCELEROMETER combined
             float orientation[] = new float[3];

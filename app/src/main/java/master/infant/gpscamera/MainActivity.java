@@ -1,14 +1,17 @@
 package master.infant.gpscamera;
 
-import android.content.Intent;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.opengl.Matrix;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 
 import master.infant.gpscamera.compass.CompassView;
 import master.infant.gpscamera.preview.CameraLogger;
 import master.infant.gpscamera.preview.CameraView;
+import master.infant.gpscamera.projection.ProjectionView;
 
 /**
  * Below is a single app base on related AR GPS location features.
@@ -41,9 +44,10 @@ import master.infant.gpscamera.preview.CameraView;
  * 6. Filter of Goto POI
  *
  * */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CompassView.CompassListener {
 
     private CameraView mCameraView;
+    private ProjectionView mProjectionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
         CompassView compassView = findViewById(R.id.compass_view);
         compassView.setLifecycleOwner(this);
+        compassView.setCompassListener(this);
+
+        mProjectionView = findViewById(R.id.projection_view);
     }
 
     public void buttonFilterAction(View view) {
@@ -70,4 +77,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onOrientationChanged() {
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float[] rotationMatrixFromVector = new float[16];
+        float[] projectionMatrix = new float[16];
+        float[] rotatedProjectionMatrix = new float[16];
+
+        SensorManager.getRotationMatrixFromVector(rotationMatrixFromVector, event.values);
+
+        if (mCameraView != null) {
+            projectionMatrix = mCameraView.getProjectionMatrix();
+        }
+
+        Matrix.multiplyMM(rotatedProjectionMatrix, 0, projectionMatrix, 0, rotationMatrixFromVector, 0);
+        mProjectionView.updateRotatedProjectionMatrix(rotatedProjectionMatrix);
+
+        updateLocation();
+    }
+
+    private void updateLocation() {
+        Location xianLocation = new Location("MockGps");
+        xianLocation.setLatitude(34.21027777);
+        xianLocation.setLongitude(108.83777777);
+        mProjectionView.updateDeviceLocation(xianLocation);
+    }
 }

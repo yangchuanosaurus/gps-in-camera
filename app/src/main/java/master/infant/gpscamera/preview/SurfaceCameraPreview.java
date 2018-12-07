@@ -1,6 +1,7 @@
 package master.infant.gpscamera.preview;
 
 import android.content.Context;
+import android.opengl.Matrix;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Surface;
@@ -16,6 +17,11 @@ public class SurfaceCameraPreview extends CameraPreview<View, SurfaceHolder> {
     private final static CameraLogger LOGGER = CameraLogger.create(SurfaceCameraPreview.class.getSimpleName());
 
     private SurfaceView mSurfaceView;
+
+    private int mCamWidth, mCamHeight;
+    private final static float Z_NEAR = 1.0f;
+    private final static float Z_FAR = 2000;
+
 
     SurfaceCameraPreview(Context context, ViewGroup parent, SurfaceCallback callback) {
         super(context, parent, callback);
@@ -42,12 +48,17 @@ public class SurfaceCameraPreview extends CameraPreview<View, SurfaceHolder> {
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
                 LOGGER.i("callback:", "surfaceChanged", "w:", width, "h:", height, "firstTime:", mFirstTime);
+                mCamWidth = width;
+                mCamHeight = height;
+
                 if (mFirstTime) {
                     onSurfaceAvailable(width, height);
                     mFirstTime = false;
                 } else {
                     onSurfaceSizeChanged(width, height);
                 }
+
+                generateProjectionMatrix();
             }
 
             @Override
@@ -74,5 +85,18 @@ public class SurfaceCameraPreview extends CameraPreview<View, SurfaceHolder> {
     @Override
     SurfaceHolder getOutput() {
         return mSurfaceView.getHolder();
+    }
+
+    private void generateProjectionMatrix() {
+        float[] projectionMatrix = new float[16];
+        float ratio = (float) mCamWidth / mCamHeight;
+        final int OFFSET = 0;
+        final float LEFT =  -ratio;
+        final float RIGHT = ratio;
+        final float BOTTOM = -1;
+        final float TOP = 1;
+        Matrix.frustumM(projectionMatrix, OFFSET, LEFT, RIGHT, BOTTOM, TOP, Z_NEAR, Z_FAR);
+
+        onProjectionMatrix(projectionMatrix);
     }
 }

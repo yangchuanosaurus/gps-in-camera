@@ -130,4 +130,8 @@ public class CameraView extends FrameLayout implements LifecycleObserver {
                     PERMISSION_CAMERA_REQUEST_CODE);
         }
     }
+
+    public float[] getProjectionMatrix() {
+        return mCameraPreview.getProjectionMatrix();
+    }
 }

@@ -2,6 +2,7 @@ package master.infant.gpscamera.preview;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ abstract class CameraPreview<T extends View, Output> {
     private SurfaceCallback mSurfaceCallback;
     private T mView;
     private boolean mCropping;
+
+    private float[] mProjectionMatrix = new float[16];
 
     // As far as I can see, these are the view/surface dimensions.
     // This live in the 'View' orientation.
@@ -100,6 +103,10 @@ abstract class CameraPreview<T extends View, Output> {
         }
     }
 
+    protected final void onProjectionMatrix(float[] projectionMatrix) {
+        mProjectionMatrix = projectionMatrix;
+    }
+
     protected final void onSurfaceDestroyed() {
         mSurfaceWidth = 0;
         mSurfaceHeight = 0;
@@ -160,6 +167,10 @@ abstract class CameraPreview<T extends View, Output> {
 
     boolean supportsCropping() {
         return true;
+    }
+
+    public float[] getProjectionMatrix() {
+        return mProjectionMatrix;
     }
 
     /**
