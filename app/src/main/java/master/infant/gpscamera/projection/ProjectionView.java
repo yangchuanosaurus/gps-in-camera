@@ -12,6 +12,8 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import master.infant.gpscamera.PoiDs;
+
 public class ProjectionView extends RelativeLayout {
 
     private static final String TAG = ProjectionView.class.getSimpleName();
@@ -29,15 +31,9 @@ public class ProjectionView extends RelativeLayout {
         init(context);
     }
 
-    private Location mCurrentLocation;
-    private Location mChengDuLocation;
-    private Location mDaTongLocation;
-
     private Location mDeviceLocation;
-
-    private View mChengDuView;
-
     private List<PoiWidget> poiViewList;
+    private PoiDs mPoiDataSource;
 
     private float[] rotatedProjectionMatrix = new float[16];
 
@@ -46,46 +42,23 @@ public class ProjectionView extends RelativeLayout {
         this.invalidate();
     }
 
-    // Xi'an: 34.21027777, 108.83777777
-    // ChengDu: 30.56305555555, 104.0697222222
-    // Datong: 40.019444444, 113.179722222
     private void init(Context context) {
-
-        mCurrentLocation = new Location("MockGps");
-        mCurrentLocation.setLatitude(34.21027777);
-        mCurrentLocation.setLongitude(108.83777777);
-
-        mChengDuLocation = new Location("MockGps");
-        mChengDuLocation.setLatitude(30.56305555555);
-        mChengDuLocation.setLongitude(104.0697222222);
-
-        mDaTongLocation = new Location("MockGps");
-        mDaTongLocation.setLatitude(40.019444444);
-        mDaTongLocation.setLongitude(113.179722222);
-
         poiViewList = new ArrayList<>();
         installPoiPoints();
     }
 
-//    public void install(POI poi) {
-//
-//        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(100, 100);
-//        params.leftMargin = -100;
-//        params.topMargin = -100;
-//
-//        mChengDuView = new View(getContext());
-//        mChengDuView.setBackgroundColor(Color.YELLOW);
-//        addView(mChengDuView, params);
-//    }
+    public void setPoiDataSource(PoiDs poiDataSource) {
+        boolean initDataSource = poiDataSource != mPoiDataSource;
+        mPoiDataSource = poiDataSource;
+        if (initDataSource) installPoiPoints();
+    }
 
-    private void installPoiPoints() {
+    public void installPoiPoints() {
         poiViewList.clear();
 
-        List<Location> poiList = new ArrayList<>();
-        poiList.add(mChengDuLocation);
-        //poiList.add(mDaTongLocation);
+        if (mPoiDataSource == null) return;
 
-        for (Location location : poiList) {
+        for (Location location : mPoiDataSource.getPoiList()) {
             PoiWidget poiView = new PoiWidget(location);
             poiViewList.add(poiView);
 

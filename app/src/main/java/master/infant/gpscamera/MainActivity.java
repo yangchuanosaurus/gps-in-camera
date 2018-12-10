@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import master.infant.gpscamera.compass.CompassView;
 import master.infant.gpscamera.preview.CameraLogger;
 import master.infant.gpscamera.preview.CameraView;
@@ -44,10 +47,13 @@ import master.infant.gpscamera.projection.ProjectionView;
  * 6. Filter of Goto POI
  *
  * */
-public class MainActivity extends AppCompatActivity implements CompassView.CompassListener {
+public class MainActivity extends AppCompatActivity implements CompassView.CompassListener, PoiDs {
 
     private CameraView mCameraView;
+    private CompassView mCompassView;
     private ProjectionView mProjectionView;
+
+    private List<Location> mPoiList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +68,13 @@ public class MainActivity extends AppCompatActivity implements CompassView.Compa
         mCameraView = findViewById(R.id.camera_view);
         mCameraView.setLifecycleOwner(this);
 
-        CompassView compassView = findViewById(R.id.compass_view);
-        compassView.setLifecycleOwner(this);
-        compassView.setCompassListener(this);
+        mCompassView = findViewById(R.id.compass_view);
+        mCompassView.setLifecycleOwner(this);
+        mCompassView.setCompassListener(this);
 
         mProjectionView = findViewById(R.id.projection_view);
+
+        setupPoiDataSource();
     }
 
     public void buttonFilterAction(View view) {
@@ -104,5 +112,43 @@ public class MainActivity extends AppCompatActivity implements CompassView.Compa
         xianLocation.setLatitude(34.21027777);
         xianLocation.setLongitude(108.83777777);
         mProjectionView.updateDeviceLocation(xianLocation);
+    }
+
+    // Xi'an: 34.21027777, 108.83777777
+    // ChengDu: 30.56305555555, 104.0697222222
+    // Datong: 40.019444444, 113.179722222
+    private void setupPoiDataSource() {
+        mPoiList = new ArrayList<>();
+
+        Location xianLocation = new Location("MockGps");
+        xianLocation.setLatitude(34.21027777);
+        xianLocation.setLongitude(108.83777777);
+
+        Location chengDuLocation = new Location("MockGps");
+        chengDuLocation.setLatitude(30.56305555555);
+        chengDuLocation.setLongitude(104.0697222222);
+
+        Location daTongLocation = new Location("MockGps");
+        daTongLocation.setLatitude(40.019444444);
+        daTongLocation.setLongitude(113.179722222);
+
+        mPoiList.add(chengDuLocation);
+        mPoiList.add(daTongLocation);
+
+        mProjectionView.setPoiDataSource(this);
+        mCompassView.setPoiDataSource(this);
+    }
+
+    @Override
+    public List<Location> getPoiList() {
+        return mPoiList;
+    }
+
+    @Override
+    public Location getDeviceLocation() {
+        Location xianLocation = new Location("MockGps");
+        xianLocation.setLatitude(34.21027777);
+        xianLocation.setLongitude(108.83777777);
+        return xianLocation;
     }
 }

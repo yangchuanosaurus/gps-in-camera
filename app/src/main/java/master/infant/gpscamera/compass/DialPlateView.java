@@ -5,12 +5,14 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.location.Location;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import master.infant.gpscamera.PoiDs;
 import master.infant.gpscamera.R;
 
 public class DialPlateView extends View {
@@ -34,6 +36,7 @@ public class DialPlateView extends View {
     int mRadius;
 
     OnDrawCallback mOnDrawCallback;
+    private PoiDs mPoiDataSource;
 
     interface OnDrawCallback {
         void onDrawReady();
@@ -96,9 +99,30 @@ public class DialPlateView extends View {
         int[] letterSize = drawDirections(canvas, width, height);
         drawDialPlate(canvas, letterSize, width, height);
 
-        canvas.drawCircle(width / 2 - 30, height / 2 + 60, RADIUS_OF_POI_POINT, mPoiPaint);
+        int dis = mRadius;
+        for (Location location : mPoiDataSource.getPoiList()) {
+            double distance = mPoiDataSource.getDeviceLocation().distanceTo(location);
+            //double angle = mPoiDataSource.getDeviceLocation().bearingTo(location);
+            double angle = location.bearingTo(mPoiDataSource.getDeviceLocation());
+            if (angle < 0) angle = 360 + angle;
+
+            Log.d(TAG, "onDraw distance=" + distance + ", angle=" + angle);
+            double x = mCenterX + dis * Math.cos(angle);
+            double y = mCenterY + dis * Math.sin(angle);
+            // todo
+            canvas.drawCircle((float) x, (float) y, RADIUS_OF_POI_POINT, mPoiPaint);
+        }
 
         if (mOnDrawCallback != null) mOnDrawCallback.onDrawReady();
+    }
+
+    void setPoiDataSource(PoiDs poiDataSource) {
+        mPoiDataSource = poiDataSource;
+        invalidate();
+    }
+
+    void update() {
+        invalidate();
     }
 
     private int[] drawDirections(Canvas canvas, int width, int height) {

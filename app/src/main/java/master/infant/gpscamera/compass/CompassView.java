@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import master.infant.gpscamera.PoiDs;
 import master.infant.gpscamera.R;
 
 public class CompassView extends RelativeLayout implements DialPlateView.OnDrawCallback,
@@ -78,6 +80,15 @@ public class CompassView extends RelativeLayout implements DialPlateView.OnDrawC
         mDialPlateView.mOnDrawCallback = this;
     }
 
+    public void setPoiDataSource(PoiDs poiDataSource) {
+        mDialPlateView.setPoiDataSource(poiDataSource);
+        mDialPlateView.update();
+    }
+
+    public void updateCenterLocation() {
+        mDialPlateView.update();
+    }
+
     public void setCompassListener(CompassListener listener) {
         mCompassListener = listener;
     }
@@ -86,7 +97,12 @@ public class CompassView extends RelativeLayout implements DialPlateView.OnDrawC
     protected void onDraw(Canvas canvas) {
         Log.d(TAG, "onDraw " + mRangeOval);
         if (mRangeOval == null) return;
+//        if (mPoiDataSource == null) return;
 
+//        Location deviceLocation = mPoiDataSource.getDeviceLocation();
+//        for (Location location : mPoiDataSource.getPoiList()) {
+//            float bearing = deviceLocation.bearingTo(location);
+//        }
         canvas.drawArc(mRangeOval, -120F, 60F, true, mRangePaint);
     }
 
