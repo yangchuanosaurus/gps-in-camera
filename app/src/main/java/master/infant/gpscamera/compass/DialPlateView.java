@@ -99,18 +99,27 @@ public class DialPlateView extends View {
         int[] letterSize = drawDirections(canvas, width, height);
         drawDialPlate(canvas, letterSize, width, height);
 
-        int dis = mRadius;
-        for (Location location : mPoiDataSource.getPoiList()) {
-            double distance = mPoiDataSource.getDeviceLocation().distanceTo(location);
-            //double angle = mPoiDataSource.getDeviceLocation().bearingTo(location);
-            double angle = location.bearingTo(mPoiDataSource.getDeviceLocation());
-            if (angle < 0) angle = 360 + angle;
+        if (mPoiDataSource != null) {
 
-            Log.d(TAG, "onDraw distance=" + distance + ", angle=" + angle);
-            double x = mCenterX + dis * Math.cos(angle);
-            double y = mCenterY + dis * Math.sin(angle);
-            // todo
-            canvas.drawCircle((float) x, (float) y, RADIUS_OF_POI_POINT, mPoiPaint);
+            double maxDistance = 0;
+            for (Location location : mPoiDataSource.getPoiList()) {
+                double distance = mPoiDataSource.getDeviceLocation().distanceTo(location);
+                maxDistance = Math.max(distance, maxDistance);
+            }
+            double radius = mRadius * 0.7;
+            for (Location location : mPoiDataSource.getPoiList()) {
+
+                double distance = mPoiDataSource.getDeviceLocation().distanceTo(location);
+                double distanceOfCircle = distance * radius / maxDistance;
+                double angle = location.bearingTo(mPoiDataSource.getDeviceLocation());
+                if (angle < 0) angle = 360 + angle;
+
+                Log.d(TAG, "onDraw distance=" + distance + ", angle=" + angle);
+                double x = mCenterX + distanceOfCircle * Math.cos(angle);
+                double y = mCenterY + distanceOfCircle * Math.sin(angle);
+                // todo
+                canvas.drawCircle((float) x, (float) y, RADIUS_OF_POI_POINT, mPoiPaint);
+            }
         }
 
         if (mOnDrawCallback != null) mOnDrawCallback.onDrawReady();
